@@ -721,7 +721,7 @@ sub registration_bootloader_params {
 }
 
 sub yast_scc_registration {
-    my $module_name = y2_module_consoletest::yast2_console_exec(yast2_module => 'scc');
+    my $module_name = y2_module_consoletest::yast2_console_exec(yast2_module => 'scc', yast2_opts => '--ncurses');
     assert_screen_with_soft_timeout(
         'scc-registration',
         timeout      => 90,

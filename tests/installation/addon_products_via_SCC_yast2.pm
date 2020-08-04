@@ -46,15 +46,25 @@ sub test_setup {
 
 sub run {
     my ($self) = @_;
-
-    test_setup;
-    $self->launch_yast2_module_x11('scc', target_match => [qw(scc-registration packagekit-warning)], maximize_window => 1);
-    if (match_has_tag 'packagekit-warning') {
-        send_key 'alt-y';
-        assert_screen 'scc-registration';
+    set_var('SCC_ADDONS', 'sdk');
+    set_var('SCC_REGISTER', 'yast');
+    if (check_var('BACKEND', 'pvm_hmc')) {
+        select_console('root-console');
+        cleanup_registration();
+        yast_scc_registration();
     }
-    fill_in_registration_data;
-    assert_screen 'generic-desktop';
+    else {
+        test_setup;
+        $self->launch_yast2_module_x11('scc', target_match => [qw(scc-registration packagekit-warning)], maximize_window => 1);
+        if (match_has_tag 'packagekit-warning') {
+            send_key 'alt-y';
+            assert_screen 'scc-registration';
+        }
+        fill_in_registration_data;
+        if (!check_var('BACKEND', 'pvm_hmc')) {
+            assert_screen 'generic-desktop';
+        }
+    }
 }
 
 sub post_fail_hook {
