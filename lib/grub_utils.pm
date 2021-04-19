@@ -5,7 +5,7 @@ use Exporter;
 
 use strict;
 use warnings;
-use opensusebasetest qw(handle_uefi_boot_disk_workaround);
+use opensusebasetest;
 use testapi;
 use utils;
 use version_utils qw(is_sle is_livecd);
@@ -68,7 +68,7 @@ sub handle_installer_medium_bootup {
     send_key 'ret';
 
     # use firmware boot manager of aarch64 to boot upgraded system
-    handle_uefi_boot_disk_workaround() if (check_var('ARCH', 'aarch64'));
+    opensusebasetest::handle_uefi_boot_disk_workaround() if (check_var('ARCH', 'aarch64'));
 }
 
 sub bug_workaround_bsc1005313 {
