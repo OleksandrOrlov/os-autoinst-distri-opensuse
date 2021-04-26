@@ -13,6 +13,8 @@ package YuiRestClient;
 use strict;
 use warnings;
 
+use YuiRestClient::VersionProvider;
+
 use constant API_VERSION => 'v1';
 
 use testapi;
@@ -48,7 +50,7 @@ sub connect_to_app {
     die "Cannot set libyui REST API server" unless $host;
     record_info('PORT',   "Used port for libyui: $port");
     record_info('SERVER', "Connecting to: $host");
-    my $app = YuiRestClient::App->new({port => $port, host => $host, api_version => API_VERSION});
+    my $app = YuiRestClient::App->new({port => $port, host => $host, api_version => YuiRestClient::VersionProvider::provide()});
     # As we start installer, REST API is not instantly available
     $app->connect(timeout => 500, interval => 10);
     set_app($app);
@@ -72,7 +74,7 @@ sub setup_libyui_running_system {
     # be able to communicate with YaST modules.
     assert_script_run("firewall-cmd --zone=public --add-port=$port/tcp --permanent");
     assert_script_run('firewall-cmd --reload');
-    my $app = YuiRestClient::App->new({port => $port, host => $host, api_version => API_VERSION});
+    my $app = YuiRestClient::App->new({port => $port, host => $host, api_version => YuiRestClient::VersionProvider::provide()});
     set_app($app);
 }
 
