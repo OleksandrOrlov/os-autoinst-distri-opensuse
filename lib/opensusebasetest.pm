@@ -26,10 +26,13 @@ use main_common 'opensuse_welcome_applicable';
 use isotovideo;
 use IO::Socket::INET;
 use x11utils qw(handle_login ensure_unlocked_desktop);
+use File::Spec::Functions;
 
 # Base class for all openSUSE tests
 
 sub grub_select;
+
+my $yuilogger;
 
 sub new {
     my ($class, $args) = @_;
@@ -37,6 +40,13 @@ sub new {
     $self->{in_wait_boot}    = 0;
     $self->{in_boot_desktop} = 0;
     return $self;
+}
+
+sub yuilogger {
+    my ($self) = @_;
+    $yuilogger //= Mojo::Log->new(level => 'debug', format => \&bmwqemu::log_format_callback);
+    $yuilogger->path(catfile(bmwqemu::result_dir, 'yui-log.txt'));
+    return $yuilogger;
 }
 
 =head2 clear_and_verify_console

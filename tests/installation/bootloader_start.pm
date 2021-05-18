@@ -35,6 +35,7 @@ use boot_from_pxe;
 
 sub run {
     my $self = shift;
+    $self->yuilogger()->debug("---------------Test");
     if (uses_qa_net_hardware() || get_var("PXEBOOT")) {
         record_info('boot_from_pxe');
         $self->boot_from_pxe::run();
